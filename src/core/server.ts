@@ -28,6 +28,9 @@ export class Server {
     registerResource(clazz: any) {
         let resource: any = clazz.prototype;
         Object.keys(clazz.prototype).forEach((key: string) => {
+            if (!clazz.prototype[key]){
+                return;
+            }
             let resoucePath = clazz.prototype[key].path;
             let resourceMethod = clazz.prototype[key].method;
             delete clazz.prototype[key].path
