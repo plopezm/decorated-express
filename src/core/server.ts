@@ -26,19 +26,20 @@ export class Server {
     }
 
     registerResource(clazz: any) {
-        let resource: any = clazz.prototype;
+        let resource: any = Object.create(clazz.prototype);
         Object.keys(clazz.prototype).forEach((key: string) => {
             if (!clazz.prototype[key]){
                 return;
             }
-            let resoucePath = clazz.prototype[key].path;
-            let resourceMethod = clazz.prototype[key].method;
+            let resoucePath = resource[key].path;
+            let resourceMethod = resource[key].method;
             delete clazz.prototype[key].path
             delete clazz.prototype[key].method;
             if (!resoucePath || !resourceMethod){
                 return;
             }
-            let resourceFunction: Function = clazz.prototype[key]
+            let resourceFunction: Function = clazz.prototype[key];
+            resourceFunction = resourceFunction.bind(resource);
             this.router[resourceMethod](resoucePath, resourceFunction);
         });
     }
