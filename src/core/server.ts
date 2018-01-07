@@ -26,7 +26,7 @@ export class Server {
     }
 
     registerResource(clazz: any) {
-        let resource: any = Object.create(clazz.prototype);
+        let resource: any = new clazz.prototype.constructor;
         Object.keys(clazz.prototype).forEach((key: string) => {
             if (!clazz.prototype[key]){
                 return;
