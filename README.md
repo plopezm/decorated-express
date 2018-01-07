@@ -66,3 +66,11 @@ server.start(8080);
 
 ```
 
+# Extending Server
+
+This server implementation is using body-parser and morgan middlewares by default. If you want to change the behaviour just extends Server class and override the method config()
+
+
+
+
+
