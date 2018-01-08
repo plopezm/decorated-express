@@ -26,21 +26,21 @@ export class Server {
     }
 
     registerResource(clazz: any) {
-        let resource: any = new clazz.prototype.constructor;
-        Object.keys(clazz.prototype).forEach((key: string) => {
-            if (!clazz.prototype[key]){
+        Object.getOwnPropertyNames(clazz.prototype).forEach((key: string) => {
+            if (clazz.prototype[key] === undefined || !(clazz.prototype[key] instanceof Function)){
                 return;
             }
-            let resoucePath = resource[key].path;
-            let resourceMethod = resource[key].method;
+            let resourcePath = clazz.prototype[key].path;
+            let resourceMethod = clazz.prototype[key].method;
             delete clazz.prototype[key].path
             delete clazz.prototype[key].method;
-            if (!resoucePath || !resourceMethod){
+            if (!resourcePath || !resourceMethod){
                 return;
             }
+            console.log("[decorated-express]: function " + key + " added in path '" + resourcePath + "' with method '"+resourceMethod+"'");
             let resourceFunction: Function = clazz.prototype[key];
-            resourceFunction = resourceFunction.bind(resource);
-            this.router[resourceMethod](resoucePath, resourceFunction);
+            resourceFunction = resourceFunction.bind(clazz.prototype.constructor);
+            this.router[resourceMethod](resourcePath, resourceFunction);
         });
     }
 
