@@ -25,7 +25,8 @@ export class Server {
         }));
     }
 
-    registerResource(clazz: any) {
+    registerResource(clazz: any) {        
+        let resource = Object.create(clazz.prototype);
         Object.getOwnPropertyNames(clazz.prototype).forEach((key: string) => {
             if (clazz.prototype[key] === undefined || !(clazz.prototype[key] instanceof Function)){
                 return;
@@ -39,7 +40,7 @@ export class Server {
             }
             console.log("[decorated-express]: function " + key + " added in path '" + resourcePath + "' with method '"+resourceMethod+"'");
             let resourceFunction: Function = clazz.prototype[key];
-            resourceFunction = resourceFunction.bind(clazz.prototype.constructor);
+            resourceFunction = resourceFunction.bind(resource);
             this.router[resourceMethod](resourcePath, resourceFunction);
         });
     }
