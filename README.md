@@ -1,6 +1,6 @@
 # decorated-express
 
-This library wraps an express application into a typescript class and provides decorators to ease restful developments
+This library wraps an express application into a typescript class and provides decorators to ease restful developments. If you want to check an example application implemented this this library, please go [node-auth-typescript](https://github.com/plopezm/node-auth-typescript)
 
 # Installing @plopezm/decorated-express
 
