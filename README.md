@@ -5,9 +5,8 @@ This library wraps an express application into a typescript class and provides d
 # Installing @plopezm/decorated-express
 
 ```
-  npm install --save express
-  npm install --save-dev @types/express
   npm install --save @plopezm/decorated-express
+  npm install --save-dev @types/express
 ```
 
 # How to use it
@@ -56,7 +55,7 @@ export class UserResource {
 2. In index.js create a server a add this resource:
 
 ```
-import { Server } from "../../decorated-express/dist/index";
+import { Server } from "@plopezm/decorated-express";
 import { UserResource } from "./resources/user-resource";
 
 

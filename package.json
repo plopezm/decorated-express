@@ -1,6 +1,6 @@
 {
   "name": "@plopezm/decorated-express",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "Decorators driven express",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
