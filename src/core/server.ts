@@ -45,8 +45,8 @@ export class Server {
         });
     }
 
-    start(port: number){
-        this.app.use('/api', this.router);
+    start(applicationPath:string, port: number){
+        this.app.use(applicationPath, this.router);
         this.app.listen(port, (err: any) => {
             if (err) {
                 return console.log(err)
