@@ -70,6 +70,17 @@ server.start(8080);
 Probably you would like to add some other middlewares to a specific resource in order to add security, logger, etc. This can be done using annotation @Middlewares(...). It is possible to add as many middlewares as you want.
 
 ```
+// Declaring our example middlewares
+function sayHelloWorldMiddleware(req: express.Request, res: express.Response, next: Function) {
+    console.log("Hello world middleware 1");
+    next();
+}
+
+function sayHelloWorldMiddleware2(req: express.Request, res: express.Response, next: Function) {
+    console.log("Hello world middleware 2");
+    next();
+}
+
 export class UserResource {
 
     userService: UserService;
@@ -78,18 +89,8 @@ export class UserResource {
       this.userService = new UserService();
     }
 
-    sayHelloWorld(req: express.Request, res: express.Response, next: Function) {
-        console.log("Hello world middleware 1");
-        next();
-    }
-
-    sayHelloWorld2(req: express.Request, res: express.Response, next: Function) {
-        console.log("Hello world middleware 2");
-        next();
-    }
-
     @GET("/hello")
-    @Middlewares(sayHelloWorld, sayHelloWorld2)
+    @Middlewares(sayHelloWorldMiddleware, sayHelloWorldMiddleware2)
     helloworld(req: express.Request, res: express.Response, next: Function){
         res.json({
             message: 'Hello World!'
