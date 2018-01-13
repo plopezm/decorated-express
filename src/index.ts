@@ -1,2 +1,2 @@
 export { Server } from './core/server';
-export { GET, POST, PUT, DELETE } from './decorations/resource.decoration';
+export { GET, POST, PUT, DELETE, Middlewares } from './decorations/resource.decoration';
