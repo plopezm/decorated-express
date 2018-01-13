@@ -33,15 +33,20 @@ export class Server {
             }
             let resourcePath = clazz.prototype[key].path;
             let resourceMethod = clazz.prototype[key].method;
+            let middlewares = clazz.prototype[key].middlewares;
             delete clazz.prototype[key].path
             delete clazz.prototype[key].method;
+            delete clazz.prototype[key].middlwares;
             if (!resourcePath || !resourceMethod){
                 return;
+            }            
+            if (!middlewares){
+                middlewares = [];
             }
-            console.log("[decorated-express]: function " + key + " added in path '" + resourcePath + "' with method '"+resourceMethod+"'");
             let resourceFunction: Function = clazz.prototype[key];
             resourceFunction = resourceFunction.bind(resource);
-            this.router[resourceMethod](resourcePath, resourceFunction);
+            this.router[resourceMethod](resourcePath, middlewares, resourceFunction);
+            console.log("[decorated-express]: function " + key + " added in path '" + resourcePath + "' with method '"+resourceMethod+"'");            
         });
     }
 
