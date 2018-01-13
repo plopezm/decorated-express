@@ -1,6 +1,6 @@
 # decorated-express
 
-This library wraps an express application into a typescript class and provides decorators to ease restful developments. If you want to check an example application implemented this this library, please go [node-auth-typescript](https://github.com/plopezm/node-auth-typescript)
+This library wraps an express application into a typescript class and provides decorators to ease restful developments. If you want to check an example application implemented using this library, please go [node-auth-typescript](https://github.com/plopezm/node-auth-typescript)
 
 # Installing @plopezm/decorated-express
 
@@ -63,6 +63,40 @@ let server = Server.bootstrap();
 server.registerResource(UserResource);
 server.start(8080);
 
+```
+
+# Adding resource middlewares
+
+Probably you would like to add some other middlewares to a specific resource in order to add security, logger, etc. This can be done using annotation @Middlewares(...). It is possible to add as many middlewares as you want.
+
+```
+export class UserResource {
+
+    userService: UserService;
+
+    constructor(){        
+      this.userService = new UserService();
+    }
+
+    sayHelloWorld(req: express.Request, res: express.Response, next: Function) {
+        console.log("Hello world middleware 1");
+        next();
+    }
+
+    sayHelloWorld2(req: express.Request, res: express.Response, next: Function) {
+        console.log("Hello world middleware 2");
+        next();
+    }
+
+    @GET("/hello")
+    @Middlewares(sayHelloWorld, sayHelloWorld2)
+    helloworld(req: express.Request, res: express.Response, next: Function){
+        res.json({
+            message: 'Hello World!'
+        });
+    }
+
+    ...
 ```
 
 # Extending Server
