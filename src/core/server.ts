@@ -1,6 +1,4 @@
 import * as express from "express";
-import * as bodyParser from 'body-parser';
-import * as logger from "morgan";
 
 export class Server {
 
@@ -14,15 +12,10 @@ export class Server {
         this.config();
     }
 
-    config(){        
-        //use logger middlware
-        this.app.use(logger("dev"));
-        //use json form parser middlware
-        this.app.use(bodyParser.json());
-        //use query string parser middlware
-        this.app.use(bodyParser.urlencoded({
-            extended: true
-        }));
+    config(...middlwares: express.RequestHandler[]){
+        middlwares.forEach((middlware: express.RequestHandler) => {
+            this.app.use(middlware);
+        });
     }
 
     registerResource(clazz: any) {        
