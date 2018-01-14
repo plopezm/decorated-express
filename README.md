@@ -69,7 +69,7 @@ server.config(logger("dev"),
 // Register our decorated resources
 server.registerResource(UserResource);
 // Server starts
-server.start(8080);
+server.start('/api/v1', 8080);
 
 ```
 
