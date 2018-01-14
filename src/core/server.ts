@@ -9,7 +9,6 @@ export class Server {
     constructor(){
         this.app = express();
         this.router = express.Router();
-        this.config();
     }
 
     config(...middlwares: express.RequestHandler[]){
