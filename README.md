@@ -56,12 +56,20 @@ export class UserResource {
 
 ```
 import { Server } from "@plopezm/decorated-express";
+import * as bodyParser from 'body-parser';
+import * as logger from "morgan";
 import { UserResource } from "./resources/user-resource";
 
-
+// Creates a new instance of a express server
 let server = Server.bootstrap();
+// Config method allows us to set the desired middleware to be used
+server.config(logger("dev"),
+            bodyParser.json(),
+            bodyParser.urlencoded({extended: true}));
+// Register our decorated resources
 server.registerResource(UserResource);
-server.start(8080);
+// Server starts
+server.start('/api/v1', 8080);
 
 ```
 
