@@ -107,3 +107,22 @@ export class UserResource {
 
     ...
 ```
+# Setting Basic authentication
+
+This library provides a way to manage automatically HTTP Basic Authentication using @BasicAuth annotation
+
+```
+function authorizeFromCredentials(user:string, password: string): boolean {
+    return user === "testing" && password === "testing"   
+}
+
+class Resource {
+    @GET('/example')
+    @BasicAuth(authorizeFromCredentials)
+    protectedMethod(req: express.Request, res: express.Response, next: Function) {
+        res.status(80);
+    }
+}
+
+```
+
