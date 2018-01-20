@@ -1,6 +1,6 @@
 import * as express from 'express';
 
-export const HEADER_AUTHENTICATION: string = "Authentication";
+export const HEADER_AUTHENTICATION: string = "authorization";
 
 export type CredentialsValidator = (user: string, password: string) => boolean;
 
@@ -25,11 +25,13 @@ function BasicAuthenticationMiddleware(req: express.Request, res: express.Respon
     //Parses request and calls validation method
     let basicAuthEncoded = req.headers[HEADER_AUTHENTICATION];
     if(!basicAuthEncoded || typeof basicAuthEncoded !== "string"){
+        console.log(`[BasicAuth]: ${HEADER_AUTHENTICATION} header not found`);
         sendNotAllowed(res);
         return;
     }
     let encodedPartIndex = basicAuthEncoded.indexOf('Basic ');
     if(encodedPartIndex === -1){
+        console.log(`[BasicAuth]: ${HEADER_AUTHENTICATION} type not valid ${basicAuthEncoded}`);
         sendNotAllowed(res);
         return;
     }
@@ -44,8 +46,9 @@ function BasicAuthenticationMiddleware(req: express.Request, res: express.Respon
     }
 
     if (!this.validateCredentials(basicAuthDecoded.substr(0, separatorIndex), basicAuthDecoded.substr(separatorIndex+1))){
-        sendNotAllowed(res);
+        console.log(`[BasicAuth]: Credentials are not valid`);
+        sendNotAllowed(res);        
         return;
     }
-    next(req, res, next);
+    next();
 }

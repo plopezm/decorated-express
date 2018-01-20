@@ -9,7 +9,6 @@ describe('Basic authentication decorator', () => {
                 return user === "testing" && password === "testing"                
             })            
             protectedMethod(req: express.Request, res: express.Response, next: Function) {
-                res.status(80);
             }
         }
         class MockedResponse {
@@ -30,7 +29,7 @@ describe('Basic authentication decorator', () => {
         it('Status value is unauthorized', () => {
             let resource = new Resource();
             let res: MockedResponse = new MockedResponse();
-            let req = {headers: { Authentication: "Basic YXNkOmFzZA=="}};
+            let req = {headers: { authorization: "Basic YXNkOmFzZA=="}};
             //Given            
             let next = resource.protectedMethod;
             //When
@@ -39,22 +38,22 @@ describe('Basic authentication decorator', () => {
             expect(res.statusVal).to.equal(401);            
         });
 
-        it('Status value is ok', () => {
+        it('Status value is not error', () => {
             let resource = new Resource();
             let res: MockedResponse = new MockedResponse();
-            let req = {headers: { Authentication: "Basic dGVzdGluZzp0ZXN0aW5n"}};
+            let req = {headers: { authorization: "Basic dGVzdGluZzp0ZXN0aW5n"}};
             //Given            
             let next = resource.protectedMethod;
             //When
             resource.protectedMethod.middlewares[0](req, res, next);
             //Then
-            expect(res.statusVal).to.equal(80);                     
+            expect(res.statusVal).to.not.equal(401);                     
         });
 
         it('Void password is managed', () => {
             let resource = new Resource();
             let res: MockedResponse = new MockedResponse();
-            let req = {headers: { Authentication: "Basic dGVzdGluZzo="}};
+            let req = {headers: { authorization: "Basic dGVzdGluZzo="}};
             //Given            
             let next = resource.protectedMethod;
             //When
