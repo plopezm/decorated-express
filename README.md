@@ -117,7 +117,7 @@ function authorizeFromCredentials(user:string, password: string): boolean {
 }
 
 class Resource {
-    @GET('/example')
+    @GET("/example")
     @BasicAuth(authorizeFromCredentials)
     protectedMethod(req: express.Request, res: express.Response, next: Function) {
         res.status(80);
