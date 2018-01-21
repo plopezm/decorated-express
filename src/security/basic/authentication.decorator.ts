@@ -21,7 +21,7 @@ function sendNotAllowed(res: express.Response, message: string){
     res.json({status: 401, msg: message});
 }
 
-function BasicAuthenticationMiddleware(req: express.Request, res: express.Response, next: Function) { 
+var BasicAuthenticationMiddleware = function(req: express.Request, res: express.Response, next: Function) { 
     //Parses request and calls validation method
     let basicAuthEncoded = req.headers[HEADER_AUTHENTICATION];
     if(!basicAuthEncoded || typeof basicAuthEncoded !== "string"){
