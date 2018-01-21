@@ -112,8 +112,7 @@ export class UserResource {
 This library provides a way to manage automatically HTTP Basic Authentication using @BasicAuth annotation
 
 ```
-import { GET, POST, DELETE, PUT, Middlewares } from "@plopezm/decorated-express";
-import { BasicAuth } from '@plopezm/decorated-express/security'
+import { GET, POST, DELETE, PUT, Middlewares, BasicAuth } from "@plopezm/decorated-express";
 
 class Resource {
 
