@@ -16,23 +16,21 @@ export function BasicAuth(validateCredentials: CredentialsValidator) {
     }
 }
 
-function sendNotAllowed(res: express.Response){
+function sendNotAllowed(res: express.Response, message: string){
     res.status(401);
-    res.json({status: 401, msg: "NOT_ALLOWED"});
+    res.json({status: 401, msg: message});
 }
 
 function BasicAuthenticationMiddleware(req: express.Request, res: express.Response, next: Function) { 
     //Parses request and calls validation method
     let basicAuthEncoded = req.headers[HEADER_AUTHENTICATION];
     if(!basicAuthEncoded || typeof basicAuthEncoded !== "string"){
-        console.log(`[BasicAuth]: ${HEADER_AUTHENTICATION} header not found`);
-        sendNotAllowed(res);
+        sendNotAllowed(res, `[BasicAuth]: ${HEADER_AUTHENTICATION} header not found`);
         return;
     }
     let encodedPartIndex = basicAuthEncoded.indexOf('Basic ');
     if(encodedPartIndex === -1){
-        console.log(`[BasicAuth]: ${HEADER_AUTHENTICATION} type not valid ${basicAuthEncoded}`);
-        sendNotAllowed(res);
+        sendNotAllowed(res, `[BasicAuth]: ${HEADER_AUTHENTICATION} type not valid '${basicAuthEncoded}'`);
         return;
     }
     encodedPartIndex += "Basic ".length;
@@ -41,13 +39,12 @@ function BasicAuthenticationMiddleware(req: express.Request, res: express.Respon
     let basicAuthDecoded = Buffer.from(basicAuthEncoded, 'base64').toString();
     let separatorIndex = basicAuthDecoded.indexOf(':');
     if(separatorIndex === -1){
-        sendNotAllowed(res);
+        sendNotAllowed(res, `[BasicAuth]: character ':' doesn't found`);
         return;
     }
 
     if (!this.validateCredentials(basicAuthDecoded.substr(0, separatorIndex), basicAuthDecoded.substr(separatorIndex+1))){
-        console.log(`[BasicAuth]: Credentials are not valid`);
-        sendNotAllowed(res);        
+        sendNotAllowed(res, `[BasicAuth]: Credentials are not valid`);        
         return;
     }
     next();

@@ -1,0 +1,1 @@
+export { BasicAuth } from './basic/authentication.decorator';

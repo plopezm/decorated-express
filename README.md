@@ -112,15 +112,19 @@ export class UserResource {
 This library provides a way to manage automatically HTTP Basic Authentication using @BasicAuth annotation
 
 ```
-function authorizeFromCredentials(user:string, password: string): boolean {
-    return user === "testing" && password === "testing"   
-}
+import { GET, POST, DELETE, PUT, Middlewares } from "@plopezm/decorated-express";
+import { BasicAuth } from '@plopezm/decorated-express/security'
 
 class Resource {
-    @GET("/example")
-    @BasicAuth(authorizeFromCredentials)
-    protectedMethod(req: express.Request, res: express.Response, next: Function) {
-        res.status(80);
+
+    static isUserValid(user: string, passwd: string): boolean{
+       return user === "testing" && password === "testing"   
+    }
+
+    @GET("/users/:username")
+    @BasicAuth(Resource.isUserValid)
+    findUser(req: express.Request, res: express.Response, next: Function){
+        ...
     }
 }
 
