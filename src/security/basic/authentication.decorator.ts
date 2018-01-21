@@ -21,6 +21,22 @@ function sendNotAllowed(res: express.Response, message: string){
     res.json({status: 401, msg: message});
 }
 
+function storeCredentails(req: express.Request, username: string, passwd: string) {
+    if(!req.params.auth){
+        req.params.auth = {
+            basic: {
+                username: username,
+                passwd: passwd
+            }
+        }
+    }else{
+        req.params.auth.basic = {
+            username: username,
+            passwd: passwd
+        }        
+    }
+}
+
 var BasicAuthenticationMiddleware = function(req: express.Request, res: express.Response, next: Function) { 
     //Parses request and calls validation method
     let basicAuthEncoded = req.headers[HEADER_AUTHENTICATION];
@@ -42,10 +58,14 @@ var BasicAuthenticationMiddleware = function(req: express.Request, res: express.
         sendNotAllowed(res, `[BasicAuth]: character ':' doesn't found`);
         return;
     }
+    let username = basicAuthDecoded.substr(0, separatorIndex);
+    let passwd = basicAuthDecoded.substr(separatorIndex+1);
 
-    if (!this.validateCredentials(basicAuthDecoded.substr(0, separatorIndex), basicAuthDecoded.substr(separatorIndex+1))){
+    if (!this.validateCredentials(username, passwd)){
         sendNotAllowed(res, `[BasicAuth]: Credentials are not valid`);        
         return;
     }
+    //Store credentials values in request params
+    storeCredentails(req, username, passwd);
     next();
 }

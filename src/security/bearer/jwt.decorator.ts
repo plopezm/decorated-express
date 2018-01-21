@@ -35,13 +35,13 @@ export const HEADER_AUTHENTICATION: string = "authorization";
 
 export type JWTCredentialsValidator = (jwt: any) => boolean;
 
-export function JWTAuth(cert: string, validateCredentials: JWTCredentialsValidator, options?: JWTSignOptions) {
+export function JWTAuth(cert: string, options?: JWTSignOptions) {
     return function (target: Object, key: string, descriptor: TypedPropertyDescriptor<any>){
         if(!descriptor.value.middlewares){
             descriptor.value.middlewares = [];
         }
         JWTAuthenticationMiddleware = JWTAuthenticationMiddleware.bind(descriptor.value);
-        descriptor.value.validateCredentials = validateCredentials;
+        //descriptor.value.validateJwtCredentials = validateJwtCredentials;
         descriptor.value.jwtoptions = options;
         descriptor.value.cert = cert;
         descriptor.value.middlewares.push(JWTAuthenticationMiddleware);
@@ -54,17 +54,31 @@ function sendNotAllowed(res: express.Response, message: string){
     res.json({status: 401, msg: message});
 }
 
+function storeCredentails(req: express.Request, payload: any) {
+    if(!req.params.auth){
+        req.params.auth = {
+            jwt: {
+                payload: payload
+            }
+        }
+    }else{
+        req.params.auth.jwt = {
+            payload: payload
+        }
+    }
+}
+
 var JWTAuthenticationMiddleware = function(req: express.Request, res: express.Response, next: Function) { 
     const authpreffix = "Bearer ";
     //Parses request and calls validation method
     let jwtToken = req.headers[HEADER_AUTHENTICATION];
     if(!jwtToken || typeof jwtToken !== "string"){
-        sendNotAllowed(res, `[BasicAuth]: ${HEADER_AUTHENTICATION} header not found`);
+        sendNotAllowed(res, `[JWTAuth]: ${HEADER_AUTHENTICATION} header not found`);
         return;
     }
     let encodedPartIndex = jwtToken.indexOf(authpreffix);
     if(encodedPartIndex === -1){
-        sendNotAllowed(res, `[BasicAuth]: ${HEADER_AUTHENTICATION} type not valid '${jwtToken}'`);
+        sendNotAllowed(res, `[JWTAuth]: ${HEADER_AUTHENTICATION} type not valid '${jwtToken}'`);
         return;
     }
     encodedPartIndex += authpreffix.length;
@@ -76,14 +90,10 @@ var JWTAuthenticationMiddleware = function(req: express.Request, res: express.Re
             sendNotAllowed(res, err);
             return
         } else {
-          // if everything is good, save to request for use in other routes
-          if(!this.validateCredentials(decoded)){
-            sendNotAllowed(res, 'Not authorized');
-            return
-          }
+          storeCredentails(req, decoded);
           next();
         }
-      });
+    });
 }
 
 export class JWTFactory {
