@@ -23,18 +23,18 @@ function sendNotAllowed(res: express.Response, message: string){
     res.json({status: 401, msg: message});
 }
 
-function storeCredentails(req: express.Request, username: string, passwd: string) {
-    if(!req.params){
-        req.params = {};
+function storeCredentails(res: express.Response, username: string, passwd: string) {
+    if(!res.locals){
+        res.locals = {};
     }
-    if(!req.params.auth){
-        req.params.auth = {};
+    if(!res.locals.auth){
+        res.locals.auth = {};
     }
     let basicData: BasicData = {
         username: username,
         passwd: passwd
     }
-    req.params.auth.basic = basicData;
+    res.locals.auth.basic = basicData;
 }
 
 var BasicAuthenticationMiddleware = function(req: express.Request, res: express.Response, next: Function) { 
@@ -66,6 +66,6 @@ var BasicAuthenticationMiddleware = function(req: express.Request, res: express.
         return;
     }
     //Storing credentials values in request params
-    storeCredentails(req, username, passwd);
+    storeCredentails(res, username, passwd);
     next();
 }

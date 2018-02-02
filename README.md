@@ -123,7 +123,7 @@ class Resource {
     @GET("/users/:username")
     @BasicAuth(Resource.isUserValid)
     findUser(req: express.Request, res: express.Response, next: Function){
-        let authentication: AuthenticationData = req.params.auth;
+        let authentication: AuthenticationData = res.locals.auth;
         ...
     }
 }

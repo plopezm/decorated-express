@@ -40,7 +40,7 @@ var JWTAuthenticationMiddleware = function(req: express.Request, res: express.Re
             sendNotAllowed(res, err);
             return
         } else {
-          storeCredentails(req, decoded);
+          storeCredentails(res, decoded);
           next();
         }
     });
@@ -59,17 +59,17 @@ function sendNotAllowed(res: express.Response, message: string){
     res.json({status: 401, msg: message});
 }
 
-function storeCredentails(req: express.Request, payload: any) {
-    if (!req.params) {
-        req.params = {};
+function storeCredentails(res: express.Response, payload: any) {
+    if (!res.locals) {
+        res.locals = {};
     }
-    if (!req.params.auth){
-        req.params.auth = {};
+    if (!res.locals.auth){
+        res.locals.auth = {};
     }
     let jwtData: JWTData = {
         payload: payload
     }
-    req.params.auth.jwt = jwtData;
+    res.locals.auth.jwt = jwtData;
 }
 
 export interface JWTSignOptions {

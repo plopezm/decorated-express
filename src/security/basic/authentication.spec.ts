@@ -48,10 +48,10 @@ describe('Basic authentication decorator', () => {
             resource.protectedMethod.middlewares[0](req, res, next);
             //Then
             expect(res.statusVal).to.not.equal(401);
-            expect(req.params.auth).not.to.undefined;
-            expect(req.params.auth.basic).not.to.undefined;
-            expect(req.params.auth.basic.username).to.equals("testing");
-            expect(req.params.auth.basic.passwd).to.equals("testing");
+            expect(res.locals.auth).not.to.undefined;
+            expect(res.locals.auth.basic).not.to.undefined;
+            expect(res.locals.auth.basic.username).to.equals("testing");
+            expect(res.locals.auth.basic.passwd).to.equals("testing");
         });
 
         it('Void password is managed', () => {

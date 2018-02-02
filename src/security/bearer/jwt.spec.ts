@@ -49,8 +49,8 @@ describe('JWT authentication decorator', () => {
         resource.protectedMethod.middlewares[0](req, res, next);
         //Then
         expect(res.statusVal).not.to.equal(401);        
-        expect(req.params.auth).not.to.undefined;
-        expect(req.params.auth.jwt.payload.user).to.equal("testing");
+        expect(res.locals.auth).not.to.undefined;
+        expect(res.locals.auth.jwt.payload.user).to.equal("testing");
     });
 
 });
