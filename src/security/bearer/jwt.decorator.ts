@@ -1,6 +1,7 @@
 import * as express from 'express';
 import * as jwtlib from "jsonwebtoken";
 import { SignCallback } from 'jsonwebtoken';
+import { JWTData } from '../security.interfaces';
 
 export function JWTAuth(cert: string, options?: JWTSignOptions) {
     return function (target: Object, key: string, descriptor: TypedPropertyDescriptor<any>){
@@ -8,7 +9,6 @@ export function JWTAuth(cert: string, options?: JWTSignOptions) {
             descriptor.value.middlewares = [];
         }
         JWTAuthenticationMiddleware = JWTAuthenticationMiddleware.bind(descriptor.value);
-        //descriptor.value.validateJwtCredentials = validateJwtCredentials;
         descriptor.value.jwt = {options: options};
         descriptor.value.jwt = {cert: cert};
         descriptor.value.middlewares.push(JWTAuthenticationMiddleware);
@@ -57,17 +57,16 @@ function sendNotAllowed(res: express.Response, message: string){
 }
 
 function storeCredentails(req: express.Request, payload: any) {
-    if(!req.params.auth){
-        req.params.auth = {
-            jwt: {
-                payload: payload
-            }
-        }
-    }else{
-        req.params.auth.jwt = {
-            payload: payload
-        }
+    if (!req.params) {
+        req.params = {};
     }
+    if (!req.params.auth){
+        req.params.auth = {};
+    }
+    let jwtData: JWTData = {
+        payload: payload
+    }
+    req.params.auth.jwt = jwtData;
 }
 
 export interface JWTSignOptions {

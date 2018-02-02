@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { BasicData } from '../security.interfaces';
 
 export const HEADER_AUTHENTICATION: string = "authorization";
 
@@ -22,19 +23,17 @@ function sendNotAllowed(res: express.Response, message: string){
 }
 
 function storeCredentails(req: express.Request, username: string, passwd: string) {
-    if(!req.params.auth){
-        req.params.auth = {
-            basic: {
-                username: username,
-                passwd: passwd
-            }
-        }
-    }else{
-        req.params.auth.basic = {
-            username: username,
-            passwd: passwd
-        }        
+    if(!req.params){
+        req.params = {};
     }
+    if(!req.params.auth){
+        req.params.auth = {};
+    }
+    let basicData: BasicData = {
+        username: username,
+        passwd: passwd
+    }
+    req.params.auth.basic = basicData;
 }
 
 var BasicAuthenticationMiddleware = function(req: express.Request, res: express.Response, next: Function) { 
@@ -65,7 +64,7 @@ var BasicAuthenticationMiddleware = function(req: express.Request, res: express.
         sendNotAllowed(res, `[BasicAuth]: Credentials are not valid`);        
         return;
     }
-    //Store credentials values in request params
+    //Storing credentials values in request params
     storeCredentails(req, username, passwd);
     next();
 }
