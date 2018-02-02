@@ -3,6 +3,8 @@ import * as jwtlib from "jsonwebtoken";
 import { SignCallback } from 'jsonwebtoken';
 import { JWTData } from '../security.interfaces';
 
+export const HEADER_AUTHENTICATION: string = "authorization";
+
 export function JWTAuth(cert: string, options?: JWTSignOptions) {
     return function (target: Object, key: string, descriptor: TypedPropertyDescriptor<any>){
         if(!descriptor.value.middlewares){
@@ -52,6 +54,7 @@ export class JWTFactory {
 }
 
 function sendNotAllowed(res: express.Response, message: string){
+    //console.log(`[JWT] Request not allowed, message: ${message}`);
     res.status(401);
     res.json({status: 401, msg: message});
 }
@@ -97,7 +100,3 @@ export interface JWTSignOptions {
     header?: object;
     encoding?: string;
 }
-
-export const HEADER_AUTHENTICATION: string = "authorization";
-
-export type JWTCredentialsValidator = (jwt: any) => boolean;

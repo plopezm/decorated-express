@@ -112,7 +112,7 @@ export class UserResource {
 This library provides a way to manage automatically HTTP Basic Authentication using @BasicAuth annotation
 
 ```
-import { GET, POST, DELETE, PUT, Middlewares, BasicAuth } from "@plopezm/decorated-express";
+import { GET, POST, DELETE, PUT, Middlewares, BasicAuth, AuthenticationData } from "@plopezm/decorated-express";
 
 class Resource {
 
@@ -123,6 +123,7 @@ class Resource {
     @GET("/users/:username")
     @BasicAuth(Resource.isUserValid)
     findUser(req: express.Request, res: express.Response, next: Function){
+        let authentication: AuthenticationData = req.params.auth;
         ...
     }
 }

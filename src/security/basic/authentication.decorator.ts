@@ -18,6 +18,7 @@ export function BasicAuth(validateCredentials: CredentialsValidator) {
 }
 
 function sendNotAllowed(res: express.Response, message: string){
+    //console.log(`[BasicAuth] Request not allowed, message: ${message}`);
     res.status(401);
     res.json({status: 401, msg: message});
 }
