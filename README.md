@@ -183,7 +183,10 @@ Creating a valid token with HMAC requires only a symmetric password. Using the f
 Example usage:
 
 ```
-    let token = JWTFactory.generateToken("secret", {"user": "tester"}, {expiresIn: 6300})
+    let signOptions: SignOptions = {
+            expiresIn: 10
+    };
+    let token = JWTFactory.generateToken("testing", {username: res.locals.auth.basic}, signOptions);
 ```
 
 In order to authenticate a token the client MUST send the token in the Authorization header as 'Bearer' type. The framework will check that header in order to check the token validity

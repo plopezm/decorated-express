@@ -3,8 +3,6 @@ import { expect } from 'chai';
 import 'mocha';
 import { JWTAuth, JWTFactory } from "./jwt.decorator";
 
-
-
 describe('JWT authentication decorator', () => { 
     class Resource {
         @JWTAuth("testing")           
