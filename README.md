@@ -189,7 +189,15 @@ Example usage:
     let token = JWTFactory.generateToken("testing", {username: res.locals.auth.basic}, signOptions);
 ```
 
-In order to authenticate a token the client MUST send the token in the Authorization header as 'Bearer' type. The framework will check that header in order to check the token validity
+In order to authenticate a token the client MUST send the token in the Authorization header as 'Bearer' type. The framework will check that header in order to check the token validity.
+
+JWTAuth annotation definition:
+
+```
+    function JWTAuth(cert: string, options?: VerifyOptions)
+```
+
+Example:
 
 ```
     class Resource {
@@ -199,7 +207,7 @@ In order to authenticate a token the client MUST send the token in the Authoriza
         //@JWTAuth("secret", {algorithm: 'HS512'})
         protectedMethod(req: express.Request, res: express.Response, next: Function) {
             let jwtPayload: JWTData = res.locals.auth.jwt.payload;
-
+            ...
         }
     }
 ```
