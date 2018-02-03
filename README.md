@@ -112,8 +112,7 @@ export class UserResource {
 This library provides a way to manage automatically HTTP Basic Authentication using @BasicAuth annotation
 
 ```
-import { GET, POST, DELETE, PUT, Middlewares } from "@plopezm/decorated-express";
-import { BasicAuth } from '@plopezm/decorated-express/security'
+import { GET, POST, DELETE, PUT, Middlewares, BasicAuth, AuthenticationData } from "@plopezm/decorated-express";
 
 class Resource {
 
@@ -124,9 +123,91 @@ class Resource {
     @GET("/users/:username")
     @BasicAuth(Resource.isUserValid)
     findUser(req: express.Request, res: express.Response, next: Function){
+        let authentication: AuthenticationData = res.locals.auth;
         ...
     }
 }
 
 ```
 
+AuthenticationData interface provides the user credentials
+
+```
+export interface BasicData {
+    username: string;
+    passwd: string;
+}
+
+export interface JWTData {
+    payload: any;
+}
+
+export interface AuthenticationData {
+    basic?: BasicData;
+    jwt?: JWTData;
+}
+```
+
+# Setting JWT authentication
+
+JWT authentication has been implemented using jsonwebtoken library. Using @JWTAuth() annotation is it possible to enable JWT authentication for a resource.
+
+We have to decide the algorithm type that we are going to use, for more information you can read [jsonwebtoken](https://github.com/auth0/node-jsonwebtoken). Anyway I am going to explain how to use some security methods.
+
+### Supported signature algorithms
+
+Signature algorithm. Could be one of these values :
+
+* - HS256:    HMAC using SHA-256 hash algorithm (default)
+* - HS384:    HMAC using SHA-384 hash algorithm
+* - HS512:    HMAC using SHA-512 hash algorithm
+* - RS256:    RSASSA using SHA-256 hash algorithm
+* - RS384:    RSASSA using SHA-384 hash algorithm
+* - RS512:    RSASSA using SHA-512 hash algorithm
+* - ES256:    ECDSA using P-256 curve and SHA-256 hash algorithm
+* - ES384:    ECDSA using P-384 curve and SHA-384 hash algorithm
+* - ES512:    ECDSA using P-521 curve and SHA-512 hash algorithm
+* - none:     No digital signature or MAC value included
+
+
+### Setting JWT authentication with HMAC
+
+Creating a valid token with HMAC requires only a symmetric password. Using the following function:
+
+```
+    export class JWTFactory {
+        static generateToken(secret: string, payload: any, options: SignOptions = {expiresIn: 1440}): any
+    }
+```
+
+Example usage:
+
+```
+    let signOptions: SignOptions = {
+            expiresIn: 10
+    };
+    let token = JWTFactory.generateToken("testing", {username: res.locals.auth.basic}, signOptions);
+```
+
+In order to authenticate a token the client MUST send the token in the Authorization header as 'Bearer' type. The framework will check that header in order to check the token validity.
+
+JWTAuth annotation definition:
+
+```
+    function JWTAuth(cert: string, options?: VerifyOptions)
+```
+
+Example:
+
+```
+    class Resource {
+        @GET("/users/:username")
+        @JWTAuth("secret")
+        // OR 
+        //@JWTAuth("secret", {algorithm: 'HS512'})
+        protectedMethod(req: express.Request, res: express.Response, next: Function) {
+            let jwtPayload: JWTData = res.locals.auth.jwt.payload;
+            ...
+        }
+    }
+```

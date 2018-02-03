@@ -35,7 +35,7 @@ describe('Basic authentication decorator', () => {
             //When
             resource.protectedMethod.middlewares[0](req, res, next);
             //Then
-            expect(res.statusVal).to.equal(401);            
+            expect(res.statusVal).to.equal(401);               
         });
 
         it('Status value is not error', () => {
@@ -47,7 +47,11 @@ describe('Basic authentication decorator', () => {
             //When
             resource.protectedMethod.middlewares[0](req, res, next);
             //Then
-            expect(res.statusVal).to.not.equal(401);                     
+            expect(res.statusVal).to.not.equal(401);
+            expect(res.locals.auth).not.to.undefined;
+            expect(res.locals.auth.basic).not.to.undefined;
+            expect(res.locals.auth.basic.username).to.equals("testing");
+            expect(res.locals.auth.basic.passwd).to.equals("testing");
         });
 
         it('Void password is managed', () => {
