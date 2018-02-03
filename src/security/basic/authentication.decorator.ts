@@ -1,4 +1,5 @@
 import * as express from 'express';
+import { BasicData } from '../security.interfaces';
 
 export const HEADER_AUTHENTICATION: string = "authorization";
 
@@ -17,11 +18,26 @@ export function BasicAuth(validateCredentials: CredentialsValidator) {
 }
 
 function sendNotAllowed(res: express.Response, message: string){
+    //console.log(`[BasicAuth] Request not allowed, message: ${message}`);
     res.status(401);
     res.json({status: 401, msg: message});
 }
 
-function BasicAuthenticationMiddleware(req: express.Request, res: express.Response, next: Function) { 
+function storeCredentails(res: express.Response, username: string, passwd: string) {
+    if(!res.locals){
+        res.locals = {};
+    }
+    if(!res.locals.auth){
+        res.locals.auth = {};
+    }
+    let basicData: BasicData = {
+        username: username,
+        passwd: passwd
+    }
+    res.locals.auth.basic = basicData;
+}
+
+var BasicAuthenticationMiddleware = function(req: express.Request, res: express.Response, next: Function) { 
     //Parses request and calls validation method
     let basicAuthEncoded = req.headers[HEADER_AUTHENTICATION];
     if(!basicAuthEncoded || typeof basicAuthEncoded !== "string"){
@@ -42,10 +58,14 @@ function BasicAuthenticationMiddleware(req: express.Request, res: express.Respon
         sendNotAllowed(res, `[BasicAuth]: character ':' doesn't found`);
         return;
     }
+    let username = basicAuthDecoded.substr(0, separatorIndex);
+    let passwd = basicAuthDecoded.substr(separatorIndex+1);
 
-    if (!this.validateCredentials(basicAuthDecoded.substr(0, separatorIndex), basicAuthDecoded.substr(separatorIndex+1))){
+    if (!this.validateCredentials(username, passwd)){
         sendNotAllowed(res, `[BasicAuth]: Credentials are not valid`);        
         return;
     }
+    //Storing credentials values in request params
+    storeCredentails(res, username, passwd);
     next();
 }
