@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import 'mocha';
 import * as express from 'express';
+
 import { BasicAuth, HEADER_AUTHENTICATION, CredentialsValidator } from './authentication.decorator';
 
 describe('Basic authentication decorator', () => { 
@@ -14,6 +15,7 @@ describe('Basic authentication decorator', () => {
         class MockedResponse {
             statusVal: number;
             data: any;
+            locals: any;
             json(data:any){
                 this.data = data;
             }

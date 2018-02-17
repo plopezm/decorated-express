@@ -1,6 +1,6 @@
 {
   "name": "@plopezm/decorated-express",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Decorators driven express",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,15 +15,15 @@
   "author": "Pablo LM <pabloplm@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1"
   },
   "devDependencies": {
     "@types/chai": "^4.1.0",
-    "@types/express": "^4.11.0",
+    "@types/express": "^4.11.1",
     "@types/jsonwebtoken": "^7.2.5",
     "@types/mocha": "^2.2.46",
     "chai": "^4.1.2",
+    "express": "^4.16.2",
     "mocha": "^4.1.0",
     "ts-node": "^4.1.0",
     "typescript": "^2.6.2"

@@ -1,4 +1,4 @@
-import * as express from "express";
+import * as express from 'express';
 
 export class Server {
 
@@ -6,8 +6,8 @@ export class Server {
     app: express.Application;
     router: any;
 
-    constructor(){
-        this.app = express();
+    constructor(app: express.Application){
+        this.app = app;
         this.router = express.Router();
     }
 
@@ -52,7 +52,7 @@ export class Server {
         });
     }
 
-    static bootstrap(): Server {
-        return new Server();
+    static bootstrap(app: express.Application): Server {
+        return new Server(app);
     }
 }
