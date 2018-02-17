@@ -55,13 +55,15 @@ export class UserResource {
 2. In index.js create a server a add this resource:
 
 ```
-import { Server } from "@plopezm/decorated-express";
+import * as express from 'express';
+import * as mongoose from 'mongoose';
 import * as bodyParser from 'body-parser';
 import * as logger from "morgan";
-import { UserResource } from "./resources/user-resource";
+
+import { Server } from "@plopezm/decorated-express";
 
 // Creates a new instance of a express server
-let server = Server.bootstrap();
+let server = Server.bootstrap(express());
 // Config method allows us to set the desired middleware to be used
 server.config(logger("dev"),
             bodyParser.json(),

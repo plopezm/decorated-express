@@ -12,6 +12,7 @@ describe('JWT authentication decorator', () => {
     class MockedResponse {
         statusVal: number;
         data: any;
+        locals: any;
         json(data:any){
             this.data = data;
         }
