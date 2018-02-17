@@ -3,9 +3,9 @@ import { BasicData } from '../security.interfaces';
 
 export const HEADER_AUTHENTICATION: string = "authorization";
 
-export type CredentialsValidator = (user: string, password: string) => boolean;
+export type CredentialsValidator = (user: string, password: string) => boolean | Promise<boolean>;
 
-export function BasicAuth(validateCredentials: CredentialsValidator) {
+export function BasicAuth(validateCredentials?: CredentialsValidator) {
     return function (target: Object, key: string, descriptor: TypedPropertyDescriptor<any>){
         if(!descriptor.value.middlewares){
             descriptor.value.middlewares = [];
@@ -61,11 +61,30 @@ var BasicAuthenticationMiddleware = function(req: express.Request, res: express.
     let username = basicAuthDecoded.substr(0, separatorIndex);
     let passwd = basicAuthDecoded.substr(separatorIndex+1);
 
-    if (!this.validateCredentials(username, passwd)){
-        sendNotAllowed(res, `[BasicAuth]: Credentials are not valid`);        
+    if(!this.validateCredentials){
+        storeCredentails(res, username, passwd);
+        next();
         return;
     }
-    //Storing credentials values in request params
-    storeCredentails(res, username, passwd);
-    next();
+
+    let validation = this.validateCredentials(username, passwd);
+
+    if (validation.then !== undefined) {
+        validation.then((validated: boolean) => {
+            if(!validated){
+                sendNotAllowed(res, `[BasicAuth]: Credentials are not valid`);
+                return;
+            }
+            storeCredentails(res, username, passwd);
+            next();
+        });
+    } else {
+        if(!validation) {
+            sendNotAllowed(res, `[BasicAuth]: Credentials are not valid`);        
+            return;
+        }
+        //Storing credentials values in request params
+        storeCredentails(res, username, passwd);
+        next();
+    }
 }
