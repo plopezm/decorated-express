@@ -5,8 +5,9 @@ This library wraps an express application into a typescript class and provides d
 # Installing @plopezm/decorated-express
 
 ```
-  npm install --save @plopezm/decorated-express
-  npm install --save-dev @types/express
+  npm install express --save
+  npm install @types/express --save-dev
+  npm install @plopezm/decorated-express --save
 ```
 
 # How to use it
