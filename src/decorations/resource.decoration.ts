@@ -1,5 +1,12 @@
 import * as express from 'express';
 
+export function RoutePath(path: string = '') {
+    return function(target: any) {
+       target.prototype.routePath = path;
+       return target;
+    }
+}
+
 export function GET(path: string){
     return function(target: Object, key: string, descriptor: TypedPropertyDescriptor<any>){
         descriptor.value.path = path;
