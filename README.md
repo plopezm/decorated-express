@@ -21,6 +21,8 @@ import * as express from "express";
 import { GET, POST } from "@plopezm/decorated-express";
 import { UserService } from "../services/user-service";
 
+// This paths will be the prefixx path to all methods
+@RoutePath('/tests')
 export class UserResource {
 
     userService: UserService;
@@ -29,6 +31,7 @@ export class UserResource {
       this.userService = new UserService();
     }
 
+    // This path is the specific path for this method
     @GET("/hello")
     helloworld(req: express.Request, res: express.Response, next: Function){
         res.json({
@@ -71,10 +74,13 @@ server.config(logger("dev"),
             bodyParser.urlencoded({extended: true}));
 // Register our decorated resources
 server.registerResource(UserResource);
-// Server starts
+// Server starts in the path '/api/v1'
 server.start('/api/v1', 8080);
 
 ```
+
+The resource path is /tests and server path is /api/v1, so in order to call /hello method, we have to request localhost:8080/api/v1/tests/hello.
+
 
 # Adding resource middlewares
 
