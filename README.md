@@ -22,7 +22,7 @@ import { GET, POST } from "@plopezm/decorated-express";
 import { UserService } from "../services/user-service";
 
 // This paths will be the prefixx path to all methods
-@RoutePath('/auth')
+@RoutePath('/tests')
 export class UserResource {
 
     userService: UserService;
@@ -79,7 +79,7 @@ server.start('/api/v1', 8080);
 
 ```
 
-The resource path is /auth and server path is /api/v1, so in order to perform a login request we have to request localhost:8080/api/v1/auth/login.
+The resource path is /tests and server path is /api/v1, so in order to call /hello method, we have to request localhost:8080/api/v1/tests/hello.
 
 
 # Adding resource middlewares
